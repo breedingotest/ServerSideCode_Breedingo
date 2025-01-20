@@ -14,31 +14,67 @@ const generateJWTToken = (userId) => {
 };
 
 // Step 1: Send OTP
+// const sendOTP = async (req, res) => {
+//   try {
+//     const email = process.env.OTPLESS_EMAIL;
+//     const channel = process.env.OTPLESS_CHANNEL;
+//     const hash = process.env.OTPLESS_TOKEN_ID;
+//     const orderId = generateUniqueValue();
+//     const expiry=process.env.OTPLESS_EXPIRY;
+//     const otpLength=process.env.OTPLESS_OTP_LENGTH;
+//     const clientId = process.env.OTPLESS_CLIENT_ID;
+//     const clientSecret = process.env.OTPLESS_CLIENT_SECRET;
+//     const { mobileNumber } = req.body;
+
+//     if (!mobileNumber || !/^\d{10}$/.test(mobileNumber)) {
+//       return res.status(400).json({ message: 'Invalid mobile number' });
+//     }
+//     const phoneNumber = "+91"+mobileNumber;
+
+//     const response = await UserDetail.sendOTP(phoneNumber, email, channel, hash, orderId, expiry, otpLength, clientId, clientSecret);
+
+//     return res.status(200).json({ 
+//       message: 'OTP sent successfully',
+//       orderId: orderId,  
+//       response 
+//     });
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// };
+
 const sendOTP = async (req, res) => {
   try {
     const email = process.env.OTPLESS_EMAIL;
     const channel = process.env.OTPLESS_CHANNEL;
     const hash = process.env.OTPLESS_TOKEN_ID;
     const orderId = generateUniqueValue();
-    const expiry=process.env.OTPLESS_EXPIRY;
-    const otpLength=process.env.OTPLESS_OTP_LENGTH;
+    const expiry = process.env.OTPLESS_EXPIRY;
+    const otpLength = process.env.OTPLESS_OTP_LENGTH;
     const clientId = process.env.OTPLESS_CLIENT_ID;
     const clientSecret = process.env.OTPLESS_CLIENT_SECRET;
     const { mobileNumber } = req.body;
 
     if (!mobileNumber || !/^\d{10}$/.test(mobileNumber)) {
+      console.error('Invalid mobile number:', mobileNumber);
       return res.status(400).json({ message: 'Invalid mobile number' });
     }
-    const phoneNumber = "+91"+mobileNumber;
+
+    const phoneNumber = "+91" + mobileNumber;
+
+    console.log('Sending OTP to:', phoneNumber);
+    console.log('Order ID:', orderId);
 
     const response = await UserDetail.sendOTP(phoneNumber, email, channel, hash, orderId, expiry, otpLength, clientId, clientSecret);
+    console.log('sendOTP response:', response);
 
     return res.status(200).json({ 
       message: 'OTP sent successfully',
       orderId: orderId,  
-      response 
+      response,
     });
   } catch (error) {
+    console.error('Error in sendOTP:', error.message);
     res.status(500).json({ error: error.message });
   }
 };
