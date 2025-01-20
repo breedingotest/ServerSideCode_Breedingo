@@ -33,7 +33,11 @@ const sendOTP = async (req, res) => {
 
     const response = await UserDetail.sendOTP(phoneNumber, email, channel, hash, orderId, expiry, otpLength, clientId, clientSecret);
 
-    return res.status(200).json({ message: 'OTP sent successfully' ,response});
+    return res.status(200).json({ 
+      message: 'OTP sent successfully',
+      orderId: orderId,  
+      response 
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
